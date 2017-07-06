@@ -4,8 +4,7 @@ import argparse
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 
 #
@@ -14,12 +13,12 @@ from dateutil.relativedelta import relativedelta
 
 desc = """Plots a heatmap of the hours spent per project."""
 parser = argparse.ArgumentParser(description=desc)
-parser.add_argument('project', type=str,
-                    help="""Project to plot. The 'parents' column of the
-                    org-clock-csv export will be searched.""")
 parser.add_argument('data', type=str,
                     help="""Input for plot, a csv file exported via
                     org-clock-csv from org-agenda-files.""")
+parser.add_argument('-p', '--projects', type=str, nargs='+',
+                    help="""Projects to plot. The 'parents' column of the
+                    org-clock-csv export will be searched.""")
 parser.add_argument('-f', '--from', dest='range_from', type=str,
                     help="""Start date.""")
 parser.add_argument('-t', '--to', dest='range_to', type=str,
@@ -50,6 +49,24 @@ data = np.genfromtxt(args.data, delimiter=',', dtype=dtype,
 # sort w.r.t. start datetime
 data.sort(order='start')
 
+def skip(entry):
+    # check if entry in range
+    if args.range_from and args.range_to:
+        s = entry['start'].decode('utf-8') > args.range_from
+        e = entry['start'][i].decode('utf-8') < args.range_to
+        if not (s and e):
+            return True # skip entry that does not match the date range
+    # check if entry in given projects
+    if args.projects:
+        in_projects = False
+        for p in args.projects:
+            if p.encode('utf-8') in entry['parents']:
+                in_projects = True
+        if not in_projects:
+            return True # skip entry that does not match any project
+    # all checks passed
+    return False
+
 # from now on I kick the numpy arrays, because I'm not used to it
 clocks = {}
 clocks['start'] = []
@@ -60,15 +77,8 @@ clocks['hours'] = []
 # make date strings to datetime objects
 # calculate hours from start and end clock (ISO)
 for i in range(len(data['parents'])):
-    # filter range
-    if args.range_from and args.range_to:
-        s = data['start'][i].decode('utf-8') > args.range_from
-        e = data['start'][i].decode('utf-8') < args.range_to
-        if not (s and e):
-            continue # skip the lines that do not match
-    # filter project
-    if not (args.project.encode('utf-8') in data['parents'][i]):
-        continue # skip the lines where project does not match
+    if skip(data[i]):
+        continue
     start = datetime.strptime(data['start'][i].decode('utf-8'),
                               '%Y-%m-%d %H:%M')
     end = datetime.strptime(data['end'][i].decode('utf-8'),
@@ -125,7 +135,6 @@ for i in range(len(clocks['start'])):
         xlabels.append(strm)
 plt.xticks(xticks, xlabels)
 plt.yticks([6.5,4.5,2.5], ["Mon", "Wed", "Fri"])
-plt.legend()
 
 if args.export:
     fig.savefig(args.export)

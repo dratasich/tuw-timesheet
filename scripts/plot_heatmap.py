@@ -4,7 +4,8 @@ import argparse
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 
 #
@@ -53,7 +54,7 @@ def skip(entry):
     # check if entry in range
     if args.range_from and args.range_to:
         s = entry['start'].decode('utf-8') > args.range_from
-        e = entry['start'][i].decode('utf-8') < args.range_to
+        e = entry['start'].decode('utf-8') < args.range_to
         if not (s and e):
             return True # skip entry that does not match the date range
     # check if entry in given projects
@@ -94,7 +95,7 @@ week0 = int(dt0.strftime('%W'))
 week1 = int(dt1.strftime('%W'))
 dyear = dt1.year - dt0.year
 # shape of efforts map
-x = np.arange(week0, dyear*52 + week1 + 1)
+x = np.arange(week0, dyear*52 + week1 + 2)
 y = np.arange(0, 8)
 # efforts
 bins = np.zeros((len(y), len(x)))
@@ -120,19 +121,13 @@ cm = LinearSegmentedColormap.from_list('efforts', colors, N=10)
 plt.pcolormesh(x, y, bins, vmin=0, vmax=8, cmap=cm, edgecolors='w')
 
 plt.title("Efforts Heatmap")
-xticks = []
-xlabels = []
-cl = ""
-for i in range(len(clocks['start'])):
-    strm = clocks['start'][i].strftime("%m")
-    if strm != cl:
-        cl = strm
-        if cl == "01":
-            strm = clocks['start'][i].strftime("%Y-%m")
-        dy = clocks['start'][i].year - dt0.year
-        cw = dy*52 + int(clocks['start'][i].strftime('%W'))
-        xticks.append(cw)
-        xlabels.append(strm)
+base = dt0.replace(day=1)
+month_list = [base + relativedelta(months=m)
+              for m in range(dyear*12 + dt1.month - dt0.month + 1)]
+xticks = [(dt.year-dt0.year)*52 + int(dt.strftime('%W')) + dt.weekday()/7
+          for dt in month_list]
+xlabels = [dt.strftime('%Y-%m') if dt.month == 1 else dt.strftime('%m')
+           for dt in month_list]
 plt.xticks(xticks, xlabels)
 plt.yticks([6.5,4.5,2.5], ["Mon", "Wed", "Fri"])
 

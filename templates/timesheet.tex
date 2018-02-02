@@ -1,0 +1,65 @@
+\documentclass[10pt,a4paper,landscape]{article}
+
+\usepackage[top=15mm, bottom=15mm, left=20mm, right=20mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+
+\pagestyle{empty}
+\renewcommand*\familydefault{\sfdefault}
+
+% cell colors
+\definecolor{tuwBlue}{RGB}{0,116,178}
+\definecolor{tuwGray}{RGB}{102,102,102}
+\definecolor{iceBlue}{RGB}{222,231,236}
+\def\tuwBlue{tuwBlue}
+
+
+\begin{document}
+
+% header
+\begin{minipage}[b]{0.05\textwidth}
+  \includegraphics[width=\textwidth]{TU_Signet}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.94\textwidth}
+  \begin{minipage}[b]{0.3\textwidth}
+    Technische Universität Wien\\
+    Institute of Computer Engineering
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.2\textwidth}
+    \bf \Large
+    Monthly Timesheet
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.29\textwidth}
+    \begin{flushright}
+      Name: \textbf{Denise Ratasich}
+    \end{flushright}
+  \end{minipage}
+  \vspace{0.5mm}
+\end{minipage}
+
+% table
+\vspace{5mm}
+{\small
+$efforts
+}
+
+% signatures
+\vspace{10mm}
+\begin{center}
+  \begin{minipage}[b]{0.4\textwidth}
+    \rule{\textwidth}{0.5pt} \\
+    \textcolor{gray}{Employee signature}
+  \end{minipage}
+  \hspace{10mm}
+  \begin{minipage}[b]{0.4\textwidth}
+    \rule{\textwidth}{0.5pt} \\
+    \textcolor{gray}{Head of Institute / Project Leader signature}
+  \end{minipage}
+\end{center}
+
+\end{document}

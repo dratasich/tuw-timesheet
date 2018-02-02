@@ -74,7 +74,6 @@ clocks['start'] = []
 clocks['end'] = []
 clocks['hours'] = []
 
-# reduce the 'parents' column to main headline (h1)
 # make date strings to datetime objects
 # calculate hours from start and end clock (ISO)
 for i in range(len(data['parents'])):

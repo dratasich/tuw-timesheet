@@ -1,0 +1,198 @@
+\documentclass[10pt,a4paper,landscape]{article}
+
+\usepackage[top=15mm, bottom=15mm, left=20mm, right=20mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+
+\pagestyle{empty}
+\renewcommand*\familydefault{\sfdefault}
+
+% cell colors
+\definecolor{tuwBlue}{RGB}{0,116,178}
+\definecolor{tuwGray}{RGB}{102,102,102}
+\definecolor{iceBlue}{RGB}{222,231,236}
+\def\tuwBlue{tuwBlue}
+
+
+\begin{document}
+
+% header
+\begin{minipage}[b]{0.05\textwidth}
+  \includegraphics[width=\textwidth]{TU_Signet}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.94\textwidth}
+  \begin{minipage}[b]{0.3\textwidth}
+    Technische Universität Wien\\
+    Institute of Computer Engineering
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.2\textwidth}
+    \bf \Large
+    Monthly Timesheet
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.29\textwidth}
+    \begin{flushright}
+      Name: \textbf{Denise Ratasich}
+    \end{flushright}
+  \end{minipage}
+  \vspace{0.5mm}
+\end{minipage}
+
+% table
+\vspace{5mm}
+{\small
+
+    \begin{tabular}{|l||p{65mm}|c|c|c|r||p{30mm}|r||p{30mm}|r||r|}
+    \hline
+    \textbf{{Date}} & \textbf{{IoT4CPS}} & \textbf{{WP}} & \textbf{{Task}} & \textbf{{ACT}} & \textbf{{Hours}} & \textbf{{Other Activities}} & \textbf{{Hours}} & \textbf{{Absence}} & \textbf{{Hours}} & \textbf{{Total}} \\ \hline \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-01 Mon &  &  &  &  & \cellcolor{\tuwBlue!20!white}  &  & \cellcolor{\tuwBlue!20!white}  & National Holiday & \cellcolor{\tuwBlue!20!white} \texttt{8.0} & \cellcolor{red!30!white} \texttt{0.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-02 Tue &  &  &  &  & \cellcolor{\tuwBlue!20!white}  &  & \cellcolor{\tuwBlue!20!white}  & Annual Leave & \cellcolor{\tuwBlue!20!white} \texttt{8.0} & \cellcolor{red!30!white} \texttt{0.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-03 Wed & gather related work for the survey &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{1.5} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{6.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{8.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-04 Thu &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-05 Fri &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{10.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{10.0}
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-06 Sat &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-07 Sun &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-08 Mon &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-09 Tue &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-10 Wed & register for mailing lists, gather related work for the survey &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{7.0} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{2.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-11 Thu & gather related work for the survey &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{5.0} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{4.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-12 Fri & methodology of knowledge base generation, develop use case &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{3.0} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{5.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{8.5}
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-13 Sat &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-14 Sun &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-15 Mon &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-16 Tue &  &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{0.5} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{8.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-17 Wed & gather related work for the survey &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{3.0} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{6.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-18 Thu &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-19 Fri &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-20 Sat &  &  &  &  &  & Teaching & \texttt{1.5} &  &  & 
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-21 Sun &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-22 Mon &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{11.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{11.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-23 Tue & talk on FOG networks (Wilfried Steiner TTTech), write timesheets &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{6.0} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{5.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{11.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-24 Wed & develop use case &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{0.5} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{11.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{11.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-25 Thu &  &  &  &  & \cellcolor{\tuwBlue!20!white}  & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{9.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-26 Fri & develop use case &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{0.5} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{6.5} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{red!30!white} \texttt{7.0}
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-27 Sat &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{lightgray}
+    2018-01-28 Sun &  &  &  &  &  &  &  &  &  & 
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-29 Mon & methodology of knowledge base generation &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{6.5} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{3.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{9.5}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-30 Tue & develop use case &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{3.0} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{7.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{10.0}
+      \\ \hline
+    
+    \rowcolor{\tuwBlue!5!white}
+    2018-01-31 Wed & create model of use case &  &  &  & \cellcolor{\tuwBlue!20!white} \texttt{2.5} & Teaching & \cellcolor{\tuwBlue!20!white} \texttt{8.0} &  & \cellcolor{\tuwBlue!20!white}  & \cellcolor{\tuwBlue!40!white} \texttt{10.5}
+      \\ \hline
+    \hline
+    \textbf{Summary} &  &  &  &  & \bf \texttt{39.0} &  & \bf \texttt{162.0} &  & \bf \texttt{16.0} & \bf \texttt{201.0}
+      \\ \hline
+    
+    \end{tabular}
+    
+}
+
+% signatures
+\vspace{10mm}
+\begin{center}
+  \begin{minipage}[b]{0.4\textwidth}
+    \rule{\textwidth}{0.5pt} \\
+    \textcolor{gray}{Employee signature}
+  \end{minipage}
+  \hspace{10mm}
+  \begin{minipage}[b]{0.4\textwidth}
+    \rule{\textwidth}{0.5pt} \\
+    \textcolor{gray}{Head of Institute / Project Leader signature}
+  \end{minipage}
+\end{center}
+
+\end{document}

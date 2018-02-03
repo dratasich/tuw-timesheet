@@ -13,6 +13,14 @@ import subprocess
 # config
 #
 
+MIN_HOURS_PER_DAY = 8
+MAX_HOURS_PER_DAY = 10
+
+
+#
+# argument parsing
+#
+
 desc = """Generates the monthly TUW timesheet from a csv."""
 
 cwd = os.getcwd()
@@ -53,30 +61,57 @@ template = string.Template(args.template.read())
 # check row
 #
 
-def check(row):
-    """Checks row for timesheet requirements. Prints warnings."""
-    err = ""
-    weekend = True if "Sat" in row[DATE].decode(enc) \
-              or "Sun" in row[DATE].decode(enc) else False
-    if weekend and (row[PHOURS] > 0 or row[OHOURS] > 0 or row[AHOURS] > 0):
-        err += "  [ERROR] hours on a weekend are not allowed\n"
+
+def check_weekday(row, err="", overhead=0):
+    """Appends errors concerning weekday."""
     if (row[PROJECT] is False or row[PROJECT].decode(enc) == "") \
-    and row[PHOURS] > 0:
+       and row[PHOURS] > 0:
         err += "  [ERROR] missing activity description of project\n"
     if len(row[PROJECT].decode(enc)) > 45:
         err += "  [WARN ] description of project too long\n"
     if row[WP] is False or row[WP] < 0:
         err += "  [ERROR] missing WP\n"
     if (row[OTHER] is False or row[OTHER].decode(enc) == "") \
-    and row[OHOURS] > 0:
+       and row[OHOURS] > 0:
         err += "  [ERROR] missing other activity\n"
     if (row[ABSENCE] is False or row[ABSENCE].decode(enc) == "") \
-    and row[AHOURS] > 0:
+       and row[AHOURS] > 0:
         err += "  [ERROR] missing absence description\n"
+    if row[TOTAL] > 0 and row[TOTAL] < MIN_HOURS_PER_DAY:
+        err += "  [ERROR] hours per day below minimum"
+    if row[TOTAL] > MAX_HOURS_PER_DAY:
+        overhead += row[TOTAL] - MAX_HOURS_PER_DAY
+        err += "  [ERROR] exceeds max hours per day ({:.1f}h)\n".format(overhead)
+    return err, overhead
+
+def check_weekend(row, err="", overhead=0):
+    """Appends errors concerning weekend."""
+    if row[PHOURS] > 0 or row[OHOURS] > 0 or row[AHOURS] > 0:
+        err += "  [ERROR] hours on a weekend are not allowed\n"
+        overhead += row[TOTAL]
+    return err, overhead
+
+def check(row):
+    """Checks row for timesheet requirements.
+
+    Prints warnings. Returns the amount of hours that exceed 10h per day (hours
+    that shall be re-assigned to other days).
+
+    """
+    err = ""
+    overhead = 0
+    weekend = True if "Sat" in row[DATE].decode(enc) \
+              or "Sun" in row[DATE].decode(enc) else False
+    if weekend:
+        err, overhead = check_weekend(row)
+    else:
+        err, overhead = check_weekday(row)
     # print with date info if errors have occured
     if err != "":
         err = row[DATE].decode(enc) + "\n" + err
         print(err, file=sys.stderr)
+    # return the overhead over the maximum allowed hours per day
+    return overhead
 
 
 #
@@ -85,8 +120,9 @@ def check(row):
 
 def tex_table_begin():
     header = list(data.dtype.names)
-    header[5] = header[7] = header[9] = "Hours"
-    align = ['l', '|p{65mm}', 'c', 'c', 'c', 'r', '|p{30mm}', 'r', '|p{30mm}', 'r', '|r']
+    header[PHOURS] = header[OHOURS] = header[AHOURS] = "Hours"
+    align = ['l', '|p{65mm}', 'c', 'c', 'c', 'r', '|p{30mm}', 'r', '|p{30mm}',
+             'r', '|r']
     if len(header) != len(align):
         RuntimeError("column number mismatch")
     # format
@@ -111,8 +147,8 @@ def tex_table_row(row):
 
 def tex_table_clock_row(row):
     row = list(row)
-    # format
-    weekend = True if "Sat" in row[0].decode(enc) or "Sun" in row[0].decode(enc) else False
+    weekend = True if "Sat" in row[DATE].decode(enc) \
+              or "Sun" in row[0].decode(enc) else False
     # colors
     rowcolor = ""
     if weekend:
@@ -128,18 +164,22 @@ def tex_table_clock_row(row):
     hcellcolor = ""
     if not weekend:
         hcellcolor = "\\cellcolor{\\tuwBlue!20!white} "
-    # fields
-    row[0] = rowcolor + " " + row[0].decode(enc)
-    row[1] = row[1].decode(enc)
-    row[2] = "{:d}".format(row[2]) if row[2] > 0 else ""  # wp
-    row[3] = "{:d}".format(row[3]) if row[3] > 0 else ""  # task
-    row[4] = ""
-    row[5] = hcellcolor + ("\\texttt{{{:.1f}}}".format(row[5]) if row[5] > 0 else "")
-    row[6] = row[6].decode(enc)
-    row[7] = hcellcolor + ("\\texttt{{{:.1f}}}".format(row[7]) if row[7] > 0 else "")
-    row[8] = row[8].decode(enc)
-    row[9] = hcellcolor + ("\\texttt{{{:.1f}}}".format(row[9]) if row[9] > 0 else "")
-    row[10] = tcellcolor + "\\texttt{{{:.1f}}}".format(row[10]) if not weekend else ""
+    # format fields
+    row[DATE] = rowcolor + " " + row[0].decode(enc)
+    row[PROJECT] = row[1].decode(enc)
+    row[WP] = "{:d}".format(row[2]) if row[2] > 0 else ""
+    row[TASK] = "{:d}".format(row[3]) if row[3] > 0 else ""
+    row[ACT] = ""
+    row[PHOURS] = hcellcolor + ("\\texttt{{{:.1f}}}".format(row[5])
+                                if row[5] > 0 else "")
+    row[OTHER] = row[6].decode(enc)
+    row[OHOURS] = hcellcolor + ("\\texttt{{{:.1f}}}".format(row[7])
+                                if row[7] > 0 else "")
+    row[ABSENCE] = row[8].decode(enc)
+    row[AHOURS] = hcellcolor + ("\\texttt{{{:.1f}}}".format(row[9])
+                                if row[9] > 0 else "")
+    row[TOTAL] = tcellcolor + "\\texttt{{{:.1f}}}".format(row[10]) \
+                 if not weekend else ""
     # latex
     res = tex_table_row(row)
     return res
@@ -151,12 +191,13 @@ def tex_efforts():
     phours_sum = 0
     ohours_sum = 0
     ahours_sum = 0
+    overhead = 0
     for r in data:
         phours_sum += r['pHours']
         ohours_sum += r['oHours']
         ahours_sum += r['aHours']
         # check row and print warnings if any
-        check(r)
+        overhead += check(r)
         # get latex representation
         res += tex_table_clock_row(r)
     res += "\hline"
@@ -166,6 +207,8 @@ def tex_efforts():
                           "\\bf \\texttt{{{:.1f}}}".format(ahours_sum),
                           "\\bf \\texttt{{{:.1f}}}".format(phours_sum+ohours_sum)])
     res += tex_table_end()
+    print("\nTotal overhead to distribute: {:.1f}".format(overhead),
+          file=sys.stderr)
     return res
 
 

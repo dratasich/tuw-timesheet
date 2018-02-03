@@ -24,6 +24,8 @@ parser.add_argument('-t', '--template', type=argparse.FileType('r'),
                     default="{}/templates/timesheet.tex".format(cwd),
                     help="""Latex template file. The variable $efforts will be
                     replaced by the efforts table.""")
+parser.add_argument('-n', '--name', default="TBD",
+                    help="""Your name.""")
 args = parser.parse_args()
 
 
@@ -37,8 +39,44 @@ enc = 'utf-8'
 data = np.genfromtxt(args.data, delimiter=';', dtype=None, names=True,
                      invalid_raise=False)
 
+# field indices
+field_idx = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+DATE, PROJECT, WP, TASK, ACT, PHOURS, OTHER, OHOURS, ABSENCE, AHOURS, TOTAL = field_idx
+assert len(field_idx) == len(data[0]), "column number mismatch"
+
+
 # load template
 template = string.Template(args.template.read())
+
+
+#
+# check row
+#
+
+def check(row):
+    """Checks row for timesheet requirements. Prints warnings."""
+    err = ""
+    weekend = True if "Sat" in row[DATE].decode(enc) \
+              or "Sun" in row[DATE].decode(enc) else False
+    if weekend and (row[PHOURS] > 0 or row[OHOURS] > 0 or row[AHOURS] > 0):
+        err += "  [ERROR] hours on a weekend are not allowed\n"
+    if (row[PROJECT] is False or row[PROJECT].decode(enc) == "") \
+    and row[PHOURS] > 0:
+        err += "  [ERROR] missing activity description of project\n"
+    if len(row[PROJECT].decode(enc)) > 45:
+        err += "  [WARN ] description of project too long\n"
+    if row[WP] is False or row[WP] < 0:
+        err += "  [ERROR] missing WP\n"
+    if (row[OTHER] is False or row[OTHER].decode(enc) == "") \
+    and row[OHOURS] > 0:
+        err += "  [ERROR] missing other activity\n"
+    if (row[ABSENCE] is False or row[ABSENCE].decode(enc) == "") \
+    and row[AHOURS] > 0:
+        err += "  [ERROR] missing absence description\n"
+    # print with date info if errors have occured
+    if err != "":
+        err = row[DATE].decode(enc) + "\n" + err
+        print(err, file=sys.stderr)
 
 
 #
@@ -117,6 +155,8 @@ def tex_efforts():
         phours_sum += r['pHours']
         ohours_sum += r['oHours']
         ahours_sum += r['aHours']
+        # check row and print warnings if any
+        check(r)
         # get latex representation
         res += tex_table_clock_row(r)
     res += "\hline"
@@ -135,6 +175,9 @@ def tex_efforts():
 
 # write tex (temp file)
 with open(args.data.replace(".csv", ".tex"), 'w') as f:
-    s = template.substitute({'efforts': tex_efforts()})
+    s = template.substitute({
+        'name': args.name,
+        'efforts': tex_efforts()
+    })
     f.write(s)
     f.close()

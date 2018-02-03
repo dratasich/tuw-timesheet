@@ -67,9 +67,9 @@ def check_weekday(row, err="", overhead=0):
     if (row[PROJECT] is False or row[PROJECT].decode(enc) == "") \
        and row[PHOURS] > 0:
         err += "  [ERROR] missing activity description of project\n"
-    if len(row[PROJECT].decode(enc)) > 45:
+    if len(row[PROJECT].decode(enc)) > 50:
         err += "  [WARN ] description of project too long\n"
-    if row[WP] is False or row[WP] < 0:
+    if (row[WP] is False or row[WP] < 0) and row[PHOURS] > 0:
         err += "  [ERROR] missing WP\n"
     if (row[OTHER] is False or row[OTHER].decode(enc) == "") \
        and row[OHOURS] > 0:
@@ -77,8 +77,10 @@ def check_weekday(row, err="", overhead=0):
     if (row[ABSENCE] is False or row[ABSENCE].decode(enc) == "") \
        and row[AHOURS] > 0:
         err += "  [ERROR] missing absence description\n"
+    if row[TOTAL] != (row[PHOURS] + row[OHOURS]):
+        err += "  [ERROR] total of hours mismatch (total != phours + ohours)\n"
     if row[TOTAL] > 0 and row[TOTAL] < MIN_HOURS_PER_DAY:
-        err += "  [ERROR] hours per day below minimum"
+        err += "  [ERROR] hours per day below minimum\n"
     if row[TOTAL] > MAX_HOURS_PER_DAY:
         overhead += row[TOTAL] - MAX_HOURS_PER_DAY
         err += "  [ERROR] exceeds max hours per day ({:.1f}h)\n".format(overhead)
@@ -87,8 +89,8 @@ def check_weekday(row, err="", overhead=0):
 def check_weekend(row, err="", overhead=0):
     """Appends errors concerning weekend."""
     if row[PHOURS] > 0 or row[OHOURS] > 0 or row[AHOURS] > 0:
-        err += "  [ERROR] hours on a weekend are not allowed\n"
         overhead += row[TOTAL]
+        err += "  [ERROR] hours on a weekend are not allowed ({:.1f})\n".format(overhead)
     return err, overhead
 
 def check(row):
@@ -121,7 +123,7 @@ def check(row):
 def tex_table_begin():
     header = list(data.dtype.names)
     header[PHOURS] = header[OHOURS] = header[AHOURS] = "Hours"
-    align = ['l', '|p{65mm}', 'c', 'c', 'c', 'r', '|p{30mm}', 'r', '|p{30mm}',
+    align = ['l', '|p{70mm}', 'c', 'c', 'c', 'r', '|p{30mm}', 'r', '|p{30mm}',
              'r', '|r']
     if len(header) != len(align):
         RuntimeError("column number mismatch")
@@ -207,8 +209,9 @@ def tex_efforts():
                           "\\bf \\texttt{{{:.1f}}}".format(ahours_sum),
                           "\\bf \\texttt{{{:.1f}}}".format(phours_sum+ohours_sum)])
     res += tex_table_end()
-    print("\nTotal overhead to distribute: {:.1f}".format(overhead),
-          file=sys.stderr)
+    if overhead > 0:
+        print("\nTotal overhead to distribute: {:.1f}".format(overhead),
+              file=sys.stderr)
     return res
 
 

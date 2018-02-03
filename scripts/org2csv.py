@@ -44,6 +44,10 @@ parser.add_argument('-p', '--project', type=str, required=True,
                     help="""Project for which the timesheet shall be
                     generated. All other hours will be summed up. Only the
                     description matching the project will be extracted.""")
+parser.add_argument('-w', '--work-package', type=int, default=-1,
+                    help="""Default work package (will be used if no work
+                    package can be found in the description of the clock
+                    entries).""")
 args = parser.parse_args()
 
 
@@ -189,6 +193,9 @@ def clocks_wp(date, project):
     # default
     wp = -1
     task = -1
+    # default if project hours written on that day
+    if hpd[project][date.day-1] > 0:
+        wp = args.work_package
     # search 'WP'
     searchstr = cat_description(date, project)
     if 'WP' in searchstr:

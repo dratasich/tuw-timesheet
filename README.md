@@ -1,5 +1,5 @@
-org-clock-plot
-==============
+Timesheets
+==========
 
 Plots statistics and timesheets for your boss.
 
@@ -17,11 +17,19 @@ Export the org-mode clocks to a csv.
 
 ### Monthly Timesheet
 
+See the usage of the scripts with the option `-h`.
+
+Example:
+
 ```bash
 $ ./scripts/org2csv.py -m 2018-01 -p IoT4CPS data/clocks.csv
 $ ./scripts/csv2tex.py --template=templates/timesheet.tex data/2018-01.csv
 $ pdflatex 2018-01.tex
 ```
+
+`csv2tex` will print warnings and errors considering some timesheet
+requirements (e.g., working hours <= 10 per day). Change the csv where needed
+and re-run `csv2tex`.
 
 Avoid following characters in the headlines of your org-file (or you will have
 to change data preprocessing in the scripts):
@@ -40,6 +48,14 @@ $ ./scripts/plot_heatmap.py data/clocks.csv -p IoT4CPS -f 2018-01
 
 Dependencies
 ------------
+
+### templates/timesheet.tex
+
+The timesheet latex template includes the TU Wien logo. Remove or download from
+the
+[official website](https://www.tuwien.ac.at/en/services/public_relations_office/publishing_web_print/corporate_design/tu_logo/).
+
+### org2csv
 
 * [org-mode](http://orgmode.org/) (> 8.3)
 * [org-clock-csv](https://github.com/atheriel/org-clock-csv) exports the clock

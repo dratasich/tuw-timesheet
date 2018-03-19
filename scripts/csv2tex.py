@@ -77,6 +77,8 @@ def check_weekday(row, err="", overhead=0):
     if (row[ABSENCE] is False or row[ABSENCE].decode(enc) == "") \
        and row[AHOURS] > 0:
         err += "  [ERROR] missing absence description\n"
+    if row[TOTAL] == 0 and row[AHOURS] == 0:
+        err += "  [ERROR] missing clocks for this day\n"
     if row[TOTAL] != (row[PHOURS] + row[OHOURS]):
         err += "  [ERROR] total of hours mismatch (total != phours + ohours)\n"
     if row[TOTAL] > 0 and row[TOTAL] < MIN_HOURS_PER_DAY:

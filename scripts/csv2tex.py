@@ -32,7 +32,7 @@ parser.add_argument('-t', '--template', type=argparse.FileType('r'),
                     default="{}/templates/timesheet.tex".format(cwd),
                     help="""Latex template file. The variable $efforts will be
                     replaced by the efforts table.""")
-parser.add_argument('-n', '--name', default="TBD",
+parser.add_argument('-n', '--name', required=True,
                     help="""Your name.""")
 args = parser.parse_args()
 
@@ -55,6 +55,9 @@ assert len(field_idx) == len(data[0]), "column number mismatch"
 
 # load template
 template = string.Template(args.template.read())
+
+# setup WP/Task summary
+summary = {}
 
 
 #
@@ -117,6 +120,36 @@ def check(row):
     # return the overhead over the maximum allowed hours per day
     return overhead
 
+
+#
+# summary
+#
+
+def add_to_summary(row):
+    """Collect the number of hours per work package and task."""
+    wp = row[WP]
+    task = row[TASK]
+    hours = row[PHOURS]
+    # create a dictionary for each WP
+    if wp not in summary.keys():
+        summary[wp] = {}
+    # create field for WP-Task
+    if task not in summary[wp].keys():
+        summary[wp][task] = 0
+    # add hours to WP-Task
+    summary[wp][task] += hours
+
+def print_summary():
+    """Prints hours per WP and task."""
+    # sorted print
+    wps = sorted(summary.keys())
+    for wp in wps:
+        tasks = sorted(summary[wp].keys())
+        print("WP{:2}         -> {:4}".format(wp, sum([summary[wp][t] for t in tasks])))
+        for task in tasks:
+            print("WP{:2}, Task{:2} -> {:4}".format(wp, task,
+                                                    summary[wp][task]))
+        print("")
 
 #
 # print
@@ -204,6 +237,8 @@ def tex_efforts():
         overhead += check(r)
         # get latex representation
         res += tex_table_clock_row(r)
+        # save data for summary
+        add_to_summary(r)
     res += "\hline"
     res += tex_table_row(["\\textbf{Summary}", "", "", "", "",
                           "\\bf \\texttt{{{:.1f}}}".format(phours_sum), "",
@@ -229,3 +264,5 @@ with open(args.data.replace(".csv", ".tex"), 'w') as f:
     })
     f.write(s)
     f.close()
+
+print_summary()

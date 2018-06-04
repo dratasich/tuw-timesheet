@@ -234,14 +234,14 @@ def csv_clock_row(date, desc, wp, task=-1, act="", phours=8, other="", ohours=0,
     row = [
         "{:%Y-%m-%d %a}".format(date),
         desc,
-        "{:d}".format(wp),
-        "{:d}".format(task),
+        "{:d}".format(wp) if wp != -1 else "",
+        "{:d}".format(task) if task != -1 else "",
         act,
-        "{:.1f}".format(phours),
+        "{:.1f}".format(phours) if phours > 0 else "",
         other,
-        "{:.1f}".format(ohours),
+        "{:.1f}".format(ohours) if ohours > 0 else "",
         absence,
-        "{:.1f}".format(ahours),
+        "{:.1f}".format(ahours) if ahours > 0 else "",
         "{:.1f}".format(total)
     ]
     res = csv_row(row)

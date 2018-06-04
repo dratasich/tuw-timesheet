@@ -7,6 +7,7 @@ import string
 import sys
 import os
 import subprocess
+import math
 
 
 #
@@ -82,7 +83,8 @@ def check_weekday(row, err="", overhead=0):
         err += "  [ERROR] missing absence description\n"
     if row[TOTAL] == 0 and row[AHOURS] == 0:
         err += "  [ERROR] missing clocks for this day\n"
-    if row[TOTAL] != (row[PHOURS] + row[OHOURS]):
+    if not math.isnan(row[PHOURS]) and not math.isnan(row[OHOURS]) and \
+       row[TOTAL] != row[PHOURS] + row[OHOURS]:
         err += "  [ERROR] total of hours mismatch (total != phours + ohours)\n"
     if row[TOTAL] > 0 and row[TOTAL] < MIN_HOURS_PER_DAY:
         err += "  [ERROR] hours per day below minimum\n"
@@ -230,9 +232,9 @@ def tex_efforts():
     ahours_sum = 0
     overhead = 0
     for r in data:
-        phours_sum += r['pHours']
-        ohours_sum += r['oHours']
-        ahours_sum += r['aHours']
+        phours_sum += r['pHours'] if not math.isnan(r['pHours']) and r['pHours'] > 0 else 0
+        ohours_sum += r['oHours'] if not math.isnan(r['oHours']) and r['oHours'] > 0 else 0
+        ahours_sum += r['aHours'] if not math.isnan(r['aHours']) and r['aHours'] > 0 else 0
         # check row and print warnings if any
         overhead += check(r)
         # get latex representation

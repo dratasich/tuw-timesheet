@@ -218,7 +218,7 @@ def csv_begin():
               "Other Activities", "oHours", "Absence", "aHours",
               "Total"]
     # csv
-    res = "#" + ";".join(header) + "\n"
+    res = ";".join(header) + "\n"
     return res
 
 def csv_end():

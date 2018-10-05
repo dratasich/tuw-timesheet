@@ -38,6 +38,12 @@ to change data preprocessing in the scripts):
   columns but interprets it as 3 columns.
 * `"` because it is wrapped with another 2 pairs of `"` which would make
   parsing more complicated.
+* German Umlaute because of the encoding.
+
+If you only want to check the csv, use:
+```bash
+$ ./scripts/csv_check.py 2018-01.csv
+```
 
 ### Heatmap
 

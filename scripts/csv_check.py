@@ -115,3 +115,4 @@ if overhead > 0:
     print("total overhead to distribute: {}".format(overhead))
 
 print("Total number or hours: {}".format(sum(data['Total'])))
+print("Number or hours for project: {}".format(sum(data['pHours'])))

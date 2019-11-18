@@ -119,19 +119,22 @@ for t in topics:
     ppd[t] = [None] * 31
 # collect to days
 dt = clocks['start'][0]
-for i in range(len(clocks['start'])):
-    if clocks['start'][i].day != dt.day:
-        dt = clocks['start'][i]
-    hpd[clocks['project'][i]][dt.day-1] += clocks['hours'][i]
-    # create list for descriptions of the day
-    if dpd[clocks['project'][i]][dt.day-1] is None:
-        dpd[clocks['project'][i]][dt.day-1] = list()
-    dpd[clocks['project'][i]][dt.day-1].append(clocks['desc'][i].decode(enc))
-    # create list of parents per day
-    if ppd[clocks['project'][i]][dt.day-1] is None:
-        ppd[clocks['project'][i]][dt.day-1] = list()
-    ppd[clocks['project'][i]][dt.day-1].append(clocks['parents'][i].decode(enc))
-
+try:
+    for i in range(len(clocks['start'])):
+        if clocks['start'][i].day != dt.day:
+            dt = clocks['start'][i]
+        hpd[clocks['project'][i]][dt.day-1] += clocks['hours'][i]
+        # create list for descriptions of the day
+        if dpd[clocks['project'][i]][dt.day-1] is None:
+            dpd[clocks['project'][i]][dt.day-1] = list()
+        dpd[clocks['project'][i]][dt.day-1].append(clocks['desc'][i].decode(enc))
+        # create list of parents per day
+        if ppd[clocks['project'][i]][dt.day-1] is None:
+            ppd[clocks['project'][i]][dt.day-1] = list()
+        ppd[clocks['project'][i]][dt.day-1].append(clocks['parents'][i].decode(enc))
+except Exception as e:
+    print(i, dt, clocks['hours'][i], clocks['desc'][i], clocks['parents'][i])
+    raise e
 
 def cat_description(date, project):
     # concatinate information to a single search string
